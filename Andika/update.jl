@@ -1,31 +1,31 @@
 const dst = ""
 const src = "@org/"
 const list = [
-	"Thin"
-	"ThinItalic"
-	"ExtraLight"
-	"ExtraLightItalic"
-	"Light"
-	"LightItalic"
+	# "Thin"
+	# "ThinItalic"
+	# "ExtraLight"
+	# "ExtraLightItalic"
+	# "Light"
+	# "LightItalic"
 	"Regular"
 	"Italic"
-	"Medium"
-	"MediumItalic"
-	"SemiBold"
-	"SemiBoldItalic"
+	# "Medium"
+	# "MediumItalic"
+	# "SemiBold"
+	# "SemiBoldItalic"
 	"Bold"
 	"BoldItalic"
-	"ExtraBold"
-	"ExtraBoldItalic"
-	"Black"
-	"BlackItalic"
+	# "ExtraBold"
+	# "ExtraBoldItalic"
+	# "Black"
+	# "BlackItalic"
 ]
 
 function update(ext::String)
 	n = 0
 	isdir(ext) || mkdir(ext)
-	for f in "$ext/Inter-" .* list .* ".$ext"
-		cmd = `pyftfeatfreeze -f 'zero,cv03,cv04,cv07,cv08,cv10,cv11,ss03' $(src * f) $(dst * f)`
+	for f in "$ext/Andika-" .* list .* ".$ext"
+		cmd = `pyftfeatfreeze -f 'cv10,cv19,cv62=1,cv67=1' $(src * f) $(dst * f)`
 		cmd |> println
 		cmd |> run
 		n += 1
@@ -35,7 +35,6 @@ function update(ext::String)
 end
 
 try
-	update("otf")
 	update("ttf")
 catch e
 	@info "错误"
