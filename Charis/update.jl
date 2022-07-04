@@ -24,8 +24,12 @@ const list = [
 function update(ext::String)
 	n = 0
 	isdir(ext) || mkdir(ext)
-	for f in "$ext/CharisSIL-" .* list .* ".$ext"
-		cmd = `pyftfeatfreeze -f 'ss01,cv19,cv62=1' -R 'Charis SIL/Charis' $(src * f) $(dst * replace(f, r"(Charis)SIL" => s"\1"))`
+	fnt = "Charis"
+	sfx = "SIL-LiteracyCompact"
+	tag = "SIL Literacy Compact"
+	for f in "$ext/$fnt$sfx-" .* list .* ".$ext"
+		cmd = "pyftfeatfreeze -f 'cv19,cv62=1' -R '$fnt $tag/$fnt' $(src * f) $(dst * replace(f, Regex("($fnt)$sfx") => s"\1"))"
+		cmd = :(@cmd $cmd) |> eval
 		cmd |> println
 		cmd |> run
 		n += 1
@@ -40,7 +44,7 @@ catch e
 	@info "错误"
 	@info e
 end
-length(ARGS) > 0 && exit()
+isempty(ARGS) || exit()
 print("> ")
 readline()
 
