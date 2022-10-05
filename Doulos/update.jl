@@ -1,3 +1,18 @@
+# Copyright (C) 2021-2022 Heptazhou <zhou@0h7z.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 const dst = ""
 const src = "@org/"
 const list = [
@@ -21,11 +36,20 @@ const list = [
 	# "BlackItalic"
 ]
 
+# https://software.sil.org/lcgfonts/download/
+# Doulos SIL Literacy Compact
+
 function update(ext::String)
-	n = 0
 	isdir(ext) || mkdir(ext)
-	for f in "$ext/DoulosSIL-" .* list .* ".$ext"
-		cmd = `pyftfeatfreeze -f 'ss01' -R 'Doulos SIL/Times Doulos SIL' $(src * f) $(dst * replace(f, r"(DoulosSIL)" => s"Times\1"))`
+	fnt, tag = "Doulos", "SIL Literacy Compact"
+	sfx, n   = replace(tag, " " => ""), 0
+	for f in "$ext/$fnt$sfx-" .* list .* ".$ext"
+		cmd = ["pyftfeatfreeze",
+			#
+			"-R", "$fnt $tag/Times $fnt SIL",
+			src * f,
+			dst * replace(f, fnt * sfx => "Times" * fnt * "SIL"),
+		] |> Cmd
 		cmd |> println
 		cmd |> run
 		n += 1

@@ -1,3 +1,18 @@
+# Copyright (C) 2021-2022 Heptazhou <zhou@0h7z.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 const dst = ""
 const src = "@org/"
 const list = [
@@ -21,11 +36,20 @@ const list = [
 	# "BlackItalic"
 ]
 
+# https://software.sil.org/lcgfonts/download/
+# Andika Compact
+
 function update(ext::String)
-	n = 0
 	isdir(ext) || mkdir(ext)
-	for f in "$ext/Andika-" .* list .* ".$ext"
-		cmd = `pyftfeatfreeze -f 'cv10,cv19,cv62=1,cv67=1' $(src * f) $(dst * f)`
+	fnt, tag = "Andika", "Compact"
+	sfx, n   = replace(tag, " " => ""), 0
+	for f in "$ext/$fnt$sfx-" .* list .* ".$ext"
+		cmd = ["pyftfeatfreeze",
+			"-f", "cv10,cv19,cv62=1,cv67=1",
+			"-R", "$fnt $tag/$fnt",
+			src * f,
+			dst * replace(f, fnt * sfx => fnt),
+		] |> Cmd
 		cmd |> println
 		cmd |> run
 		n += 1
